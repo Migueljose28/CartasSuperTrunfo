@@ -50,6 +50,7 @@ void compareDecks(Deck *c, Deck *c2) {
 
 }
 
+
 void printDeck(Deck *c) {
     // Área para exibição dos dados da cidade
     printf("Estado: %c\n", c->state_char);
@@ -63,3 +64,5 @@ void printDeck(Deck *c) {
     printf("PIB per Capita: %.2f reais\n", pibToCapita(c));
     printf("Super Poder %.2f\n\n", superPower(c));
 }
+
+
