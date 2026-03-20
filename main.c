@@ -1,55 +1,137 @@
 #include <stdio.h>
 #include <string.h>
 #include "Deck.h"
+#include <stdbool.h>
+#include "GameLogic.h"
 
 // Desafio Super Trunfo - Países
 // Tema 1 - Cadastro das cartas
 // Objetivo: No nível novato você deve criar as cartas representando as cidades utilizando scanf para entrada de dados e printf para exibir as informações.
-void compare_attr(Deck *c, Deck *c2) {
-    printf("\nComparação de Cartas (Atributo: População):\n");
-    
-    printf("Carta 1 - %s (%c): (%d)\n", c->city, c->state_char, c->quantity_of_people);
-    printf("Carta 2 - %s (%c): (%d)\n", c2->city, c2->state_char, c2->quantity_of_people);
-    if (c->quantity_of_people > c2->quantity_of_people) {
-        printf("Resultado: Carta 1 (%s) venceu!\n", c->city); 
-    }
-    else {
-        printf("Resultado: Carta 2 (%s) venceu!\n", c2->city);
-    };
-
-};
-
 
 int main() {
 // Área para definição das variáveis para armazenar as propriedades das cidades
     Deck cartas[2];
+    bool gameIsOn = true;
+    int option, option2;
 
-    // Área para entrada de dados
-    for (int i = 0; i < 2; i++){
-        printf("Estado: ");
-        scanf(" %c", &cartas[i].state_char);
-        printf("Codigo: ");
-        scanf(" %s", &cartas[i].code);
-        getchar();
-        
-        printf("Nome da Cidade: ");
-        fgets(cartas[i].city, sizeof(cartas[i].city), stdin);
-        cartas[i].city[strcspn(cartas[i].city, "\n")] = 0; // Retirando Enter
+    while (gameIsOn) {
+        printf("\n### Menu Interativo ###\n");
+        printf("0 - Sair\n");
+        printf("1 - Atribuir as cartas\n");
+        printf("2 - Comparar todos atributos das cartas\n");
+        printf("3 - Comparar atributo especifico\n");
+        scanf("%d", &option);
 
-        printf("População: ");
-        scanf(" %d", &cartas[i].quantity_of_people);
-        printf("Area: ");
-        scanf(" %f", &cartas[i].area);
-        printf("PIB: ");
-        scanf("%f", &cartas[i].pib);
-        printf("Numero de pontos turisticos: ");
-        scanf("%d", &cartas[i].number_points_of_tourism);
+        switch (option) {
+            case 0:
+                gameIsOn = false;
+                break;
+            case 1:
+                add_decks(cartas);
+                break;
+            case 2: 
+                compare_both_deck_complete(&cartas[0], &cartas[1]);
+                break;
+            case 3:
+                printf("Escolha um atributo especifico:\n");
+                printf("0 - Voltar\n");
+                printf("1 - Area\n");
+                printf("2 - PIB\n");
+                printf("3 - Ponto turisticos\n");
+                printf("4 - Super Poder\n");
+                printf("5 - Densidade População\n");
+                printf("6 - PIB per capital\n");
+                scanf("%d", &option2);
+                
+                switch (option2) {
+                    case 0:
+                        break;
 
+                    case 1:
+                        compare_attr(
+                            "Área",
+                            cartas[0].area,
+                            cartas[1].area,
+                            cartas[0].city,
+                            cartas[1].city,
+                            0
+                        );
+                        break;
 
-        printDeck(&cartas[0]);
+                    case 2:
+                        compare_attr(
+                            "PIB",
+                            cartas[0].pib,
+                            cartas[1].pib,
+                            cartas[0].city,
+                            cartas[1].city,
+                            0
+                        );
+                        break;
+
+                    case 3:
+                        compare_attr(
+                            "Pontos Turísticos",
+                            cartas[0].number_points_of_tourism,
+                            cartas[1].number_points_of_tourism,
+                            cartas[0].city,
+                            cartas[1].city,
+                            0
+                        );
+                        break;
+
+                    case 4: {
+                        float poder1 = superPower(&cartas[0]);
+                        float poder2 = superPower(&cartas[1]);
+
+                        compare_attr(
+                            "Super Poder",
+                            poder1,
+                            poder2,
+                            cartas[0].city,
+                            cartas[1].city,
+                            0
+                        );
+                        break;
+                    }
+
+                    case 5: {
+                        float dens1 = populational(&cartas[0]);
+                        float dens2 = populational(&cartas[1]);
+
+                        compare_attr(
+                            "Densidade Populacional",
+                            dens1,
+                            dens2,
+                            cartas[0].city,
+                            cartas[1].city,
+                            1 // menor vence
+                        );
+                        break;
+                    }
+
+                    case 6: {
+                        float pibpc1 = pibToCapita(&cartas[0]);
+                        float pibpc2 = pibToCapita(&cartas[1]);
+
+                        compare_attr(
+                            "PIB per capita",
+                            pibpc1,
+                            pibpc2,
+                            cartas[0].city,
+                            cartas[1].city,
+                            0
+                        );
+                        break;
+                    }
+
+                    default:
+                        printf("Opção inválida!\n");
+                        break;
+                }
+                break;            
+        } 
     }
-    compareDecks(&cartas[0], &cartas[1]);
-    compare_attr(&cartas[0], &cartas[1]);
 
 
     return 0;

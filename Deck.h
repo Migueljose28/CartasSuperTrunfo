@@ -8,7 +8,6 @@ typedef struct {
 } Deck;
 
 void printDeck(Deck *c);
-void compareDecks(Deck *c, Deck *c2);
 float pibToCapita(Deck *c);
 float populational(Deck *c);
 float superPower(Deck *c);
